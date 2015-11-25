@@ -36,8 +36,6 @@ We also have a follow-up IEEE paper:
 
 >> 对于边界单词 如x(0),其对应的左边界为x(-1), 所以可以表示为 [x(-1),x(-1)...,x(0),x(1),....,x(n)]
 
->>
-
 
 
 
@@ -52,25 +50,17 @@ repository is in your `PYTHONPATH`, e.g run the command
 `export PYTHONPATH=/path/where/is13/is:$PYTHONPATH`. Then, run the following
 commands:
 
-```
-git clone git@github.com:mesnilgr/is13.git
-python is13/examples/elman-forward.py
-```
 
-For running the Jordan architecture:
+For running the elman architecture:
 
 ```
-python is13/examples/jordan-forward.py
+python elman-forward.py
 ```
 
-## ATIS Data
+## ATIS Data: already downloaded & conlleval.pl script.
 
-[Download ATIS Dataset here!](https://www.dropbox.com/s/3lxl9jsbw0j7h8a/atis.pkl?dl=0)
 
-```
-import cPickle
-train, test, dicts = cPickle.load(open("atis.pkl"))
-```
+
 
 `dicts` is a python dictionnary that contains the mapping from the labels, the
 name entities (if existing) and the words to indexes used in `train` and `test`
