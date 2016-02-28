@@ -37,7 +37,21 @@ class RNN:
         o,s=self.forward_propagation(x)
         return np.argmax(o,axis=1)
 
+    def calculate_total_loss(self,x,y):
+        L=0
+        # For each sentence...
+        for i in np.range(len(y)):
+            o,s=self.forward_propagation(x[i])
+            # we only care about our prediction of the 'correct' words
+            correct_word_prediction=o[np.arange(len(y[i])),y[i]]
+            # Add to the loss based on how off we were
+            L+=-1*np.sum(np.log(correct_word_prediction))
 
-# RNN.predict=predict
-# RNN.forward_propagation=forward_propagation
+        return L
+
+    def calculate_loss(self,x,y):
+        # Divide the total loss by the number of training examples
+        N=np.sum(len(y_i) for y_i in y)
+        return self.calculate_loss(x,y)/N
+
 
