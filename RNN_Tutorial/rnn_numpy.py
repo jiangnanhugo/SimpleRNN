@@ -5,6 +5,7 @@ import theano.tensor as T
 import operator
 import nltk
 import itertools
+import datetime
 
 from rnn import RNN
 
@@ -65,6 +66,7 @@ print "\ny:\n%s\n%s" %(" ".join([index2word[x] for x in y_example]),y_example)
 np.random.seed(10)
 model=RNN(vocabulary_size)
 o,s=model.forward_propagation(X_train[10])
+print X_train[10]
 print o.shape
 print o
 
@@ -75,3 +77,7 @@ print predictions
 # Limit to 1000 examples to save time
 print "Expected Loss for random predicitons: %f " % np.log(vocabulary_size)
 print "Actual loss: %f" % model.calculate_loss(X_train[:1000],y_train[:1000])
+
+np.random.seed(10)
+model = RNN(vocabulary_size)
+model.sgd_step(X_train[10], y_train[10], 0.005)
