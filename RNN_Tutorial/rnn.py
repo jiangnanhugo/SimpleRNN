@@ -115,7 +115,7 @@ def train_with_sgd(model,X_train,y_train,learning_rate=0.005,nepoch=100,evaluate
                 print "Setting learning rate to %f" % learning_rate
 
             sys.stdout.flush()
-        # For ezch training example...
+        # For each training example...
             for i in range(len(y_train)):
                 # One SGD step
                 model.sgd_step(X_train[i],y_train[i],learning_rate)
