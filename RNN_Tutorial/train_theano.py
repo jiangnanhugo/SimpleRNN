@@ -13,7 +13,7 @@ hidden_dim=80
 learning_rate=0.005
 nepoch=100
 sentence_start_token='SENTENCE_START'
-sentence_end_token='SENTENCE_END'
+sentence_end_token  ='SENTENCE_END'
 unknown_token="UNKNOWN_TOKEN"
 model_file=''
 
@@ -56,7 +56,7 @@ tokenized_sentences=[nltk.word_tokenize(sent) for sent in sentences]
 
 # Count the word frequencies
 word_freq=nltk.FreqDist(itertools.chain(*tokenized_sentences))
-print "Founded %d unique words tokens." %len(word_freq.items())
+print "Founded %d unique words tokens." % len(word_freq.items())
 
 # Get the most common words and build index2word and word2index vectors
 vocab=word_freq.most_common(vocabulary_size-1)
@@ -72,8 +72,8 @@ for i,sent in enumerate(tokenized_sentences):
     tokenized_sentences[i]=[w if w in word2index else unknown_token for w in sent]
 
 # Create the training data
-X_train=np.asarray([[word2index for w in sent[:-1]] for sent in tokenized_sentences])
-y_train=np.asarray([[word2index for w in sent[1:]] for sent in tokenized_sentences])
+X_train=np.asarray([[word2index[w] for w in sent[:-1]] for sent in tokenized_sentences])
+y_train=np.asarray([[word2index[w] for w in sent[1:]] for sent in tokenized_sentences])
 
 
 
