@@ -1,6 +1,6 @@
 import numpy as np
 from util import softmax
-import datetime
+from datetime import datetime
 import sys
 
 class RNN:
@@ -74,7 +74,7 @@ class RNN:
             # Backpropagation through time (for at most self.bptt_truncate steps)
             for bptt_step in np.arange(max(0,t-self.bptt_truncate),t+1)[::-1]:
                 # Print "Backpropagation step t=%d bptt step=%d" %(t,bptt_step)
-                dLdV+=np.outer(delta_t,s[bptt_step-1])
+                dLdW+=np.outer(delta_t,s[bptt_step-1])
                 dLdU[:,x[bptt_step]]+=delta_t
                 # Update delta for next step
                 delta_t=self.W.T.dot(delta_t)*(1-s[bptt_step-1]**2)
@@ -107,7 +107,7 @@ def train_with_sgd(model,X_train,y_train,learning_rate=0.005,nepoch=100,evaluate
         if(epoch % evaluate_loss_after==0):
             loss=model.calculate_loss(X_train,y_train)
             losses.append((num_examples_seen,loss))
-            time=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            time=time.now().strftime('%Y-%m-%d %H:%M:%S')
             print "%s: Loss after num_examples_seen=%d epoch=%d: %f" %(time,num_examples_seen,epoch,loss)
             # Adjust the learning rate if loss increases
             if(len(losses)>1 and losses[-1][1] >losses[-2][1]):
