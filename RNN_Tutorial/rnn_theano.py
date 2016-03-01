@@ -21,6 +21,7 @@ class RNN:
         self.W=theano.shared(name='W',value=W.astype(theano.config.floatX))
         # We store the Theano graph here
         self.graph={}
+        self.build()
 
     def build(self):
         U,V,W=self.U,self.V,self.W

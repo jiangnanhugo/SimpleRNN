@@ -74,7 +74,7 @@ class RNN:
             # Backpropagation through time (for at most self.bptt_truncate steps)
             for bptt_step in np.arange(max(0,t-self.bptt_truncate),t+1)[::-1]:
                 # Print "Backpropagation step t=%d bptt step=%d" %(t,bptt_step)
-                dLdV+=np.outer(delta_t,s[bptt_step-1])
+                dLdW+=np.outer(delta_t,s[bptt_step-1])
                 dLdU[:,x[bptt_step]]+=delta_t
                 # Update delta for next step
                 delta_t=self.W.T.dot(delta_t)*(1-s[bptt_step-1]**2)
