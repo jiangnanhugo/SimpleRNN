@@ -5,7 +5,7 @@ import theano.tensor as T
 import operator
 import nltk
 import itertools
-import datetime
+from datetime import datetime
 
 from rnn_numpy import RNN,train_with_sgd
 

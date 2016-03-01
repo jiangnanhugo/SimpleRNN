@@ -107,7 +107,7 @@ def train_with_sgd(model,X_train,y_train,learning_rate=0.005,nepoch=100,evaluate
         if(epoch % evaluate_loss_after==0):
             loss=model.calculate_loss(X_train,y_train)
             losses.append((num_examples_seen,loss))
-            time=time.now().strftime('%Y-%m-%d %H:%M:%S')
+            time=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             print "%s: Loss after num_examples_seen=%d epoch=%d: %f" %(time,num_examples_seen,epoch,loss)
             # Adjust the learning rate if loss increases
             if(len(losses)>1 and losses[-1][1] >losses[-2][1]):
