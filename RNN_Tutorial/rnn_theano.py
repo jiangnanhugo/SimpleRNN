@@ -19,45 +19,38 @@ class RNN:
         self.U=theano.shared(name='U',value=U.astype(theano.config.floatX))
         self.V=theano.shared(name='V',value=V.astype(theano.config.floatX))
         self.W=theano.shared(name='W',value=W.astype(theano.config.floatX))
-        # We store the Theano graph here
-        self.graph={}
+        self.params=[self.U,self.V,self.W]
         self.build()
 
     def build(self):
-        U,V,W=self.U,self.V,self.W
         x=T.ivector('x')
         y=T.ivector('y')
+        lr=T.scalar('learning_rate')
 
-        def forward_prop_step(x_t,s_tm1,U,V,W):
-            s_t=T.tanh(U[:,x_t]+W.dot(s_tm1))
-            o_t=T.nnet.softmax(V.dot(s_t))
+        def _recurrence(x_t,s_tm1):
+            s_t=T.tanh(self.U[:,x_t]+T.dot(s_tm1,self.W))
+            o_t=T.nnet.softmax(T.dot(s_t,self.V))
             return [o_t[0],s_t]
-        [o,s],updates=theano.scan(fn=forward_prop_step,
+
+        [o,s],updates=theano.scan(fn=_recurrence,
                                   sequences=x,
                                   outputs_info=[None,dict(initial=T.zeros(self.hidden_dim))],
-                                  non_sequences=[U,V,W],
                                   truncate_gradient=self.bptt_truncate,
                                   strict=True)
         prediction=T.argmax(o,axis=1)
         o_error=T.sum(T.nnet.categorical_crossentropy(o,y))
 
         # Gradients
-        dU=T.grad(o_error,U)
-        dV=T.grad(o_error,V)
-        dW=T.grad(o_error,W)
+        gparams=T.grad(o_error,self.params)
+        updates=[(param,param-lr*gparam) for param,gparam in zip(self.params,gparams)]
+
 
         # Assign functions
         self.forward_propagation=theano.function([x],o)
         self.predict=theano.function([x],prediction)
-        self.ce_error=theano.function([x,y],o_error)
-        self.bptt=theano.function([x,y],[dU,dV,dW])
-
-        # SGD
-        learning_rate=T.scalar('learning_rate')
-        self.sgd_step=theano.function([x,y,learning_rate],[],
-                                      updates=[(self.U,self.U-learning_rate*dU),
-                                               (self.V,self.V-learning_rate*dV),
-                                               (self.W,self.W-learning_rate*dW)])
+        self.train=theano.function(intputs=[x,y,lr],
+                                   outputs=o_error,
+                                   updates=updates)
     def calculate_total_loss(self,X,Y):
         return np.sum([self.ce_error(x,y) for x,y in zip(X,Y)])
 
