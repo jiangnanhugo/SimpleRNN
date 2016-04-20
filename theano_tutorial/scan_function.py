@@ -2,6 +2,19 @@ import theano
 import theano.tensor as T
 import numpy as np
 
+
+k = T.iscalar("k")
+A = T.vector("A")
+def inner_fct(prior_result, B):
+    return B, B, prior_result * B   #!! change return of inner_fct
+#!! change scan as below
+[B1, B2, result], updates = theano.scan(fn=inner_fct,
+                            outputs_info=[None, None, T.ones_like(A)],
+                            non_sequences=A, n_steps=k)
+final_result = result[-1]
+power = theano.function(inputs=[A, k], outputs=final_result,
+                      updates=updates)
+print(power(range(10), 2))
 '''
 X=T.matrix('x')
 W=T.matrix('w')
@@ -77,7 +90,7 @@ x=np.diag(np.arange(1,6,dtype=theano.config.floatX),1)
 print x
 print(compute_norm_lines(x))
 print(np.sqrt(x**2).sum(1))
-
+'''
 
 
 # Computing norms of columns of X
@@ -95,7 +108,7 @@ print(compute_norm_cols(x))
 # comparison with numpy
 print(np.sqrt((x ** 2).sum(0)))
 
-
+'''
 
 # x(t) = x(t - 2).dot(U) + x(t - 1).dot(V) + tanh(x(t - 1).dot(W) + b)
 
