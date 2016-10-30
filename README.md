@@ -1,4 +1,2 @@
-# RNN-LSTM
-RNN tutorial &amp; LSTM tutorial
-
-babi rnn model with keras, 41% accuracy
+# SimpleRNN
+RNN tutorial with Numpy and theano implementation
